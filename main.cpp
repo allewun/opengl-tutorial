@@ -4,15 +4,19 @@
 #include <GL/glew.h>
 
 int main() {
+    // setup the window & OpenGL context (implicitly created by SFML)
     sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Close|sf::Style::Resize);
 
+    // use GLEW to check for available OpenGL version
     glewExperimental = GL_TRUE;
     glewInit();
 
+    // test correct setup
     GLuint vertexBuffer;
     glGenBuffers(1, &vertexBuffer);
-    printf("%u\n", vertexBuffer);
+    printf("%u\n", vertexBuffer); // should print "1"
 
+    // event loop
     bool running = true;
     while (running) {
         sf::Event windowEvent;
