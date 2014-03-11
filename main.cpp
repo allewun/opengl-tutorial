@@ -20,6 +20,7 @@ int main() {
     bool running = true;
     while (running) {
         sf::Event windowEvent;
+
         while (window.pollEvent(windowEvent)) {
             switch (windowEvent.type) {
                 case sf::Event::Closed:
@@ -32,6 +33,13 @@ int main() {
             }
 
         }
+
+        // Clear the screen to black
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // swap buffers
+        window.display();
     }
 
     return 0;
