@@ -27,6 +27,13 @@ const GLfloat vertices[] = {
     -0.5f, -0.5f  // vertex 3 (X,Y)
 };
 
+// Event loop callbacks
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+}
+
 
 int main() {
     // setup GLFW
@@ -49,6 +56,7 @@ int main() {
     }
 
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, keyCallback);
 
 
     // use GLEW to check for available OpenGL version
