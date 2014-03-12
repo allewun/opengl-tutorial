@@ -15,9 +15,10 @@ const GLchar* vertexSource =
 
 const GLchar* fragmentSource =
     "#version 150 core\n"
+    "uniform vec3 triangleColor;"
     "out vec4 outColor;"
     "void main() {"
-    "   outColor = vec4(1.0, 1.0, 1.0, 1.0);"
+    "   outColor = vec4(triangleColor, 1.0);"
     "}";
 
 // Triangle
@@ -105,6 +106,10 @@ int main() {
     glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(posAttrib);
 
+
+    // change color after shader has been compiled via a "uniform"
+    GLint uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
+    glUniform3f(uniColor, 0.0, 1.0, 0.0);
 
     // event loop
     while(!glfwWindowShouldClose(window)) {
