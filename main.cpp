@@ -30,6 +30,9 @@ int main() {
     glewExperimental = GL_TRUE;
     glewInit();
 
+    printf("[OpenGL : v%s]\n[GLSL   : %s]\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
+
+
 
     // define vertices of triangle
     GLfloat vertices[] = {
@@ -101,10 +104,12 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
         // swap buffers
         window.display();
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+
     }
 
     // clean-up
