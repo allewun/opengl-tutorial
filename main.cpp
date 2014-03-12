@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include <math.h>
 
 
 // Shaders
@@ -107,15 +108,15 @@ int main() {
     glEnableVertexAttribArray(posAttrib);
 
 
-    // change color after shader has been compiled via a "uniform"
-    GLint uniColor = glGetUniformLocation(shaderProgram, "triangleColor");
-    glUniform3f(uniColor, 0.0, 1.0, 0.0);
-
     // event loop
     while(!glfwWindowShouldClose(window)) {
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+
+        float time = (float)glfwGetTime();
+        glUniform3f(uniColor, (sin(time * 4.0f) + 1.0f) / 2.0f, 0.0f, 0.0f);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
