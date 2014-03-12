@@ -1,9 +1,8 @@
-#include <SFML/Window.hpp>
-#include <iostream>
-
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include <iostream>
+#include <GLFW/glfw3.h>
 
 
 // Shaders
@@ -21,10 +20,36 @@ const GLchar* fragmentSource =
     "   outColor = vec4(1.0, 1.0, 1.0, 1.0);"
     "}";
 
+// Triangle
+const GLfloat vertices[] = {
+     0.0f,  0.5f, // vertex 1 (X,Y)
+     0.5f, -0.5f, // vertex 2 (X,Y)
+    -0.5f, -0.5f  // vertex 3 (X,Y)
+};
+
 
 int main() {
-    // setup the window & OpenGL context (implicitly created by SFML)
-    sf::Window window(sf::VideoMode(800, 600), "OpenGL", sf::Style::Close|sf::Style::Resize);
+    // setup GLFW
+    if (!glfwInit()) {
+        std::cerr << "glfwInit() failed";
+        return -1;
+    }
+
+    // configure GLFW window
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+    GLFWwindow* window = glfwCreateWindow(800, 600, "OpenGL", NULL, NULL);
+
+    if (!window) {
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+
 
     // use GLEW to check for available OpenGL version
     glewExperimental = GL_TRUE;
@@ -32,14 +57,6 @@ int main() {
 
     printf("[OpenGL : v%s]\n[GLSL   : %s]\n", glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-
-
-    // define vertices of triangle
-    GLfloat vertices[] = {
-         0.0f,  0.5f, // vertex 1 (X,Y)
-         0.5f, -0.5f, // vertex 2 (X,Y)
-        -0.5f, -0.5f  // vertex 3 (X,Y)
-    };
 
     // create vertex array object (stores links betweens attributs and VBOs)
     GLuint vao;
@@ -82,44 +99,26 @@ int main() {
 
 
     // event loop
-    bool running = true;
-    while (running) {
-        sf::Event windowEvent;
-
-        while (window.pollEvent(windowEvent)) {
-            switch (windowEvent.type) {
-                case sf::Event::Closed:
-                    running = false;
-                    break;
-                case sf::Event::KeyPressed:
-                    if (windowEvent.key.code == sf::Keyboard::Escape)
-                        running = false;
-                    break;
-                default: running = true;
-            }
-
-        }
-
+    while(!glfwWindowShouldClose(window)) {
         // Clear the screen to black
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        // swap buffers
-        window.display();
-
-
+        glfwSwapBuffers(window);
+        glfwPollEvents();
     }
+
 
     // clean-up
     glDeleteProgram(shaderProgram);
     glDeleteShader(fragmentShader);
     glDeleteShader(vertexShader);
-
     glDeleteBuffers(1, &vbo);
-
     glDeleteVertexArrays(1, &vao);
+
+    glfwTerminate();
 
     return 0;
 }
