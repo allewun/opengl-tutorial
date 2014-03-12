@@ -10,23 +10,27 @@
 const GLchar* vertexSource =
     "#version 150 core\n"
     "in vec2 position;"
+    "in vec3 color;"
+    "out vec3 Color;"
     "void main() {"
+    "   Color = color;"
     "   gl_Position = vec4(position, 0.0, 1.0);"
     "}";
 
 const GLchar* fragmentSource =
     "#version 150 core\n"
     "uniform vec3 triangleColor;"
+    "in vec3 Color;"
     "out vec4 outColor;"
     "void main() {"
-    "   outColor = vec4(triangleColor, 1.0);"
+    "   outColor = vec4(Color, 1.0);"
     "}";
 
 // Triangle
 const GLfloat vertices[] = {
-     0.0f,  0.5f, // vertex 1 (X,Y)
-     0.5f, -0.5f, // vertex 2 (X,Y)
-    -0.5f, -0.5f  // vertex 3 (X,Y)
+     0.0,  0.5, 1.0, 0.0, 0.0, // vertex 1 (X,Y,R,G,B) (red)
+     0.5, -0.5, 0.0, 1.0, 0.0, // vertex 2 (X,Y,R,G,B) (green)
+    -0.5, -0.5, 0.0, 0.0, 1.0  // vertex 3 (X,Y,R,G,B) (blue)
 };
 
 // Event loop callbacks
@@ -104,8 +108,12 @@ int main() {
 
     // specify how attributes are formatted and ordered (vertex data layout)
     GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), 0);
     glEnableVertexAttribArray(posAttrib);
+
+    GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+    glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (void*)(2*sizeof(GLfloat)));
+    glEnableVertexAttribArray(colAttrib);
 
 
     // event loop
@@ -115,8 +123,8 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
 
-        float time = (float)glfwGetTime();
-        glUniform3f(uniColor, (sin(time * 4.0f) + 1.0f) / 2.0f, 0.0f, 0.0f);
+        // float time = (float)glfwGetTime();
+        // glUniform3f(uniColor, (sin(time * 4.0f) + 1.0f) / 2.0f, 0.0f, 0.0f);
 
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
